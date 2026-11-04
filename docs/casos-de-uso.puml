@@ -1,0 +1,49 @@
+@startuml casos-de-uso
+' VidaPet: diagrama de casos de uso (TP1)
+' Fernando Leite Rodrigues · Projeto de Bloco: Desenvolvimento Back-End [26E4_5] · Instituto Infnet
+' Gerar: plantuml -tsvg docs/casos-de-uso.puml  (ou -tpng)
+
+left to right direction
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam actorStyle default
+skinparam packageStyle rectangle
+skinparam usecase {
+  BackgroundColor #FFFFFF
+  BorderColor #175C46
+}
+skinparam rectangle {
+  BorderColor #175C46
+}
+skinparam ArrowColor #333333
+
+title VidaPet: Sistema de Agendamento da Clínica Veterinária\nDiagrama de casos de uso
+caption Fernando Leite Rodrigues · Projeto de Bloco: Desenvolvimento Back-End [26E4_5] · Instituto Infnet
+
+actor "Recepcionista" as Rec
+actor "Veterinário" as Vet
+
+rectangle "Sistema VidaPet" {
+  usecase "UC01 Cadastrar animal" as UC01
+  usecase "UC02 Cadastrar veterinário" as UC02
+  usecase "UC03 Agendar consulta" as UC03
+  usecase "UC04 Cancelar consulta" as UC04
+  usecase "UC05 Consultar agenda do dia" as UC05
+  usecase "UC06 Registrar consulta realizada" as UC06
+  usecase "UC07 Verificar disponibilidade" as UC07
+}
+
+Rec -- UC01
+Rec -- UC02
+Rec -- UC03
+Rec -- UC04
+Rec -- UC05
+
+UC05 -- Vet
+UC06 -- Vet
+
+' Todo agendamento verifica janela (RN01, RN02), data passada (RN04)
+' e conflito de veterinário (RN03) antes de gravar.
+UC03 ..> UC07 : <<include>>
+
+@enduml
