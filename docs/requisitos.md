@@ -64,7 +64,7 @@ Decorrência de RN05 e RN06: a consulta nasce **agendada** e segue para **realiz
 |---|---|---|---|
 | RNF01 | tecnologia | Desenvolvido em C# com ASP.NET Core (.NET 10), trilha mantida até a Apresentação Final. | enunciado · escolha do aluno |
 | RNF02 | segurança | O perfil recepcionista executa RF01–RF10; o perfil veterinário executa RF10–RF13; em RF11 o usuário autenticado deve ser o veterinário da consulta. | RN07 · vale a partir da etapa de autenticação |
-| RNF03 | segurança | RN01–RN07 são validadas no servidor, nunca apenas no cliente. | vale a partir da etapa de API |
+| RNF03 | segurança | RN01–RN08 são validadas no servidor, nunca apenas no cliente. | vale a partir da etapa de API |
 | RNF04 | confiabilidade | O agendamento é atômico: ou a consulta é gravada sem conflito, ou nada muda; dois agendamentos simultâneos para o mesmo veterinário e horário nunca gravam ambos. | RN03 · problema dos horários duplicados |
 | RNF05 | desempenho | A agenda do dia de um veterinário responde em até 2 s. | premissa, a calibrar com o professor |
 | RNF06 | usabilidade | Agendar uma consulta exige no máximo 3 passos a partir da agenda do dia. | premissa, a calibrar com o professor |
@@ -90,8 +90,7 @@ Decisões tomadas onde o enunciado não responde; valem até o professor confirm
 | P02 | O mesmo animal pode ter duas consultas no mesmo horário com veterinários diferentes? RN03 só fala do veterinário. |
 | P03 | "Observações" é preenchido só na realização ou também no agendamento? |
 | P04 | Como o veterinário cadastrado se liga ao usuário que entra no sistema? |
-| P06 | O programa standalone do TP1 já deve tocar o domínio ou basta exercitar tipos, operadores e controle de fluxo? |
-| P07 | O vídeo apresenta os requisitos e casos de uso, o programa, ou os dois? |
+| P07 | O vídeo do TP1 deve cobrir requisitos e programa, ou o foco é justificar as escolhas de requisito, ator e cenário? |
 
 ## 6. Atores e casos de uso
 
@@ -119,8 +118,19 @@ O login fica fora do diagrama, como pré-condição "ator identificado" nas espe
 
 ## 7. Especificações de casos de uso
 
-Os três casos especificados são os que concentram regras de negócio. Os fluxos alternativos são
+Os quatro casos especificados cobrem todas as regras de negócio. Os fluxos alternativos são
 numerados pelo passo de onde desviam.
+
+### UC01 – Cadastrar animal
+
+| Campo | Conteúdo |
+|---|---|
+| Ator principal | Recepcionista |
+| Pré-condição | Recepcionista identificada |
+| Fluxo principal | 1. Recepcionista informa nome, espécie e idade do animal, nome e telefone do tutor.<br>2. Sistema verifica que a espécie é cão ou gato (RN08).<br>3. Sistema registra o animal e mostra os dados registrados. |
+| Fluxos alternativos | 2a. Espécie diferente de cão ou gato (RF02): sistema recusa, mostra o motivo e volta ao passo 1. |
+| Pós-condição | Animal registrado e disponível para agendamento. |
+| Requisitos | RF01 · RF02 · RN08 |
 
 ### UC03 – Agendar consulta
 
@@ -129,7 +139,7 @@ numerados pelo passo de onde desviam.
 | Ator principal | Recepcionista |
 | Pré-condição | Recepcionista identificada; animal e veterinário cadastrados |
 | Fluxo principal | 1. Recepcionista informa o animal.<br>2. Sistema mostra o animal e o tutor.<br>3. Recepcionista informa o veterinário e a data.<br>4. Sistema mostra a agenda do dia do veterinário (RF10).<br>5. Recepcionista escolhe o horário.<br>6. Sistema verifica a disponibilidade (UC07): janela de segunda a sexta, das 8h às 18h, em horários de 30 min (RN01, RN02, PR01); data e horário não passados (RN04, PR02); veterinário sem consulta agendada no horário (RN03, PR03).<br>7. Recepcionista confirma.<br>8. Sistema registra a consulta como agendada e mostra animal, veterinário, data e horário. |
-| Fluxos alternativos | 2a. Animal não encontrado: sistema avisa e volta ao passo 1.<br>6a. Fora da janela (RF05): sistema mostra o motivo e volta ao passo 5.<br>6b. Data ou horário já passados (RF07): sistema mostra o motivo e volta ao passo 3.<br>6c. Veterinário já tem consulta agendada no horário (RF06): sistema mostra o conflito e volta ao passo 5.<br>7a. Recepcionista desiste: nada é registrado. |
+| Fluxos alternativos | 6a. Fora da janela (RF05): sistema mostra o motivo e volta ao passo 5.<br>6b. Data ou horário já passados (RF07): sistema mostra o motivo e volta ao passo 3.<br>6c. Veterinário já tem consulta agendada no horário (RF06): sistema mostra o conflito e volta ao passo 5.<br>7a. Recepcionista desiste: nada é registrado. |
 | Pós-condição | Consulta registrada como agendada; o horário do veterinário fica ocupado. |
 | Requisitos | RF04 · RF05 · RF06 · RF07 · RF10 · RN01–RN04 · RNF04 · PR01–PR03 |
 
@@ -138,7 +148,7 @@ numerados pelo passo de onde desviam.
 | Campo | Conteúdo |
 |---|---|
 | Ator principal | Recepcionista |
-| Pré-condição | Recepcionista identificada; consulta registrada |
+| Pré-condição | Recepcionista identificada |
 | Fluxo principal | 1. Recepcionista informa o veterinário e a data.<br>2. Sistema lista as consultas do dia, com animal, horário e situação (RF10).<br>3. Recepcionista escolhe a consulta.<br>4. Sistema verifica que a consulta está agendada (RN05).<br>5. Recepcionista confirma o cancelamento.<br>6. Sistema muda a situação para cancelada. |
 | Fluxos alternativos | 2a. Nenhuma consulta no dia: sistema avisa e volta ao passo 1.<br>4a. Consulta realizada ou já cancelada (RF09): sistema recusa, mostra a situação atual e encerra.<br>5a. Recepcionista desiste: nada muda. |
 | Pós-condição | Consulta cancelada (estado final). O horário volta a ficar livre, porque RN03 só conta consultas agendadas. |

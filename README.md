@@ -18,9 +18,9 @@ apresentou o passo a passo com dicas e exemplos e, depois, revisou o que foi pro
 questionamentos de acordo com o contexto de competência exigido pela disciplina.
 
 No programa standalone (`src/`), todo o código foi escrito pelo aluno. A IA explicou conceitos e
-sintaxe e revisou cada etapa, sem gerar a solução. Na documentação (`docs/`), a IA apoiou a
-redação dos requisitos, dos casos de uso e do diagrama PlantUML a partir das decisões do aluno,
-que revisou e aprovou o conteúdo.
+sintaxe e revisou cada etapa, sem gerar a solução. Na documentação (`docs/`), a IA redigiu a
+primeira versão dos requisitos, dos casos de uso e do diagrama PlantUML a partir do enunciado e das
+decisões do aluno, que revisou e aprovou o conteúdo.
 
 Os resultados da IA foram conferidos pelo aluno, compilando e testando o programa e revisando os
 documentos.

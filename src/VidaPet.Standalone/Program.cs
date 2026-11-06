@@ -1,7 +1,7 @@
 ﻿// ==========================================
 // VidaPet.Standalone - TP1 Projeto de Bloco: Desenvolvimento Back-End [26E4_5] - Instituto Infnet
 // Fernando Leite Rodrigues
-// 03/11/2026
+// 06/11/2026
 // ==========================================
 
 bool executando = true;
@@ -14,9 +14,10 @@ while (executando)
     Console.WriteLine("========================================");
     Console.WriteLine("1. Verificar Horário de Atendimento (RN02/RN01)");
     Console.WriteLine("2. Verificar Espécie Permitida (RN08)");
-    Console.WriteLine("3. Sair");
+    Console.WriteLine("3. Verificar Data/Hora Futura (RN04)");
+    Console.WriteLine("4. Sair");
     Console.WriteLine("----------------------------------------");
-    Console.Write("Escolha uma opção (1-3): ");
+    Console.Write("Escolha uma opção (1-4): ");
 
     string? opcao = Console.ReadLine();
 
@@ -31,12 +32,16 @@ while (executando)
             break;
 
         case "3":
+            VerificarDataHoraFutura();
+            break;
+
+        case "4":
             executando = false;
             Console.WriteLine("\nEncerrando o programa. Até logo!");
             break;
 
         default:
-            Console.WriteLine("\n[Falha] Opção inválida! Escolha um número entre 1 e 3.");
+            Console.WriteLine("\n[Falha] Opção inválida! Escolha um número entre 1 e 4.");
             Pausar();
             break;
     }
@@ -127,6 +132,36 @@ void VerificarEspecieAnimal()
     else
     {
         Console.WriteLine($"\n[Falha] A espécie '{especie}' não é atendida pela clínica (Apenas Cães e Gatos).");
+    }
+
+    Pausar();
+}
+
+void VerificarDataHoraFutura()
+{
+    Console.Clear();
+    Console.WriteLine("--- Verificação de Data e Hora Futura (RN04) ---");
+    
+    Console.Write("Informe a data e hora do agendamento (formato DD/MM/AAAA HH:MM): ");
+    
+    if (!DateTime.TryParse(Console.ReadLine(), out DateTime dataAgendamento))
+    {
+        Console.WriteLine("\n[Falha] Formato de data e hora inválido. Utilize DD/MM/AAAA HH:MM.");
+        Pausar();
+        return;
+    }
+
+    DateTime momentoAtual = DateTime.Now;
+    bool dataHoraFutura = dataAgendamento > momentoAtual;
+
+    if (dataHoraFutura)
+    {
+        Console.WriteLine($"\n[Sucesso] Data e Hora Permitidas! Agendamento válido para {dataAgendamento:dd/MM/yyyy HH:mm}.");
+    }
+    else
+    {
+        Console.WriteLine("\n[Falha] Data e Hora Negadas.");
+        Console.WriteLine(" - Motivo: Não é permitido agendar em datas ou horários passados (RN04).");
     }
 
     Pausar();
